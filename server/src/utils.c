@@ -5,7 +5,6 @@ t_log* logger;
 int iniciar_servidor(void)
 {
 	int socket_servidor;
-
 	struct addrinfo hints, *servinfo, *p;
 
 	memset(&hints, 0, sizeof(hints));
@@ -19,22 +18,21 @@ int iniciar_servidor(void)
                          servinfo->ai_socktype,
                          servinfo->ai_protocol);
 
-	bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen);
+	if(bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen) != 0) log_error(logger, "Error al bindear el socket");
 
-	listen(socket_servidor, SOMAXCONN);
-
+  	if(listen(socket_servidor, SOMAXCONN); == -1) log_error(logger, "Error al escuchar las conexiones entrantes");
+  	
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");
 
 	return socket_servidor;
 }
 
-int esperar_cliente(int socket_servidor)
-{
-	// Aceptamos un nuevo cliente
+int esperar_cliente(int socket_servidor){
 	int socket_cliente;
 	socket_cliente = accept(socket_servidor, NULL, NULL);
-	log_info(logger, "Se conecto un cliente!");
+	if (socket_cliente == -1) log_error(logger, "Error al aceptar un nuevo cliente");
+	else log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
 }

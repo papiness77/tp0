@@ -7,7 +7,7 @@ int main(void)
 	int conexion;
 	char* ip;
 	char* puerto;
-	char* valor;
+	char* clave;
 
 	t_log* logger;
 	t_config* config;
@@ -23,17 +23,11 @@ int main(void)
 		exit(1);
 	}
 
-	log_info(logger, "soy un log");
-
-
-	// Usando el logger creado previamente
-	// Escribi: "Hola! Soy un log"
-
+	log_info(logger, "Hola soy un log");
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
 	config = iniciar_config();
-
 	config = config_create("cliente.config");
 	if(config == NULL){
 		printf("Error config");
@@ -42,30 +36,16 @@ int main(void)
 
 	ip = config_get_string_value(config, "IP");
 	puerto = config_get_string_value(config, "PUERTO");
-	valor = config_get_string_value(config, "CLAVE");
-
-	
-
-	log_info(logger, ip);
-	log_info(logger, puerto);
-	log_info(logger, valor);
+	clave = config_get_string_value(config, "CLAVE");
 
 
-	/* ---------------- LEER DE CONSOLA ---------------- */
+	log_info(logger, ip);log_info(logger, puerto);log_info(logger, clave);
 
 	//leer_consola(logger);
 	
-	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
-
-	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
-
-	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
 
-	// Enviamos al servidor el valor de CLAVE como mensaje
-	enviar_mensaje(valor, conexion);
-
-	// Armamos y enviamos el paquete
+	enviar_mensaje(clave, conexion);
 	paquete(conexion);
 
 	terminar_programa(conexion, logger, config);
